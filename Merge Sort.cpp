@@ -16,8 +16,8 @@ void mergesort(int l,int r){
     R.push_back(a[i]);
   }
   int Lid=0,Rid=0,k=l;
-  while(Lid<L.size() || Rid<R.size()){
-   if(Rid==R.size() || (Lid<L.size() && L[Lid]<R[Rid])){
+  while(Lid<(int)L.size() || (int)Rid<R.size()){
+   if(Rid==(int)R.size() || (Lid<(int)L.size() && L[Lid]<R[Rid])){
     a[k++]=L[Lid++];
    }else{
     a[k++]=R[Rid++];
@@ -34,11 +34,12 @@ int32_t main(){
     freopen("output.txt","w",stdout); 
     #endif
     auto start=clock();
-    int n;
-    cin >> n;
-    for(int i=1;i<=n;i++)cin>>a[i];
-    mergesort(1,n);
-  for(int i=1;i<=n;i++){
+    int n,x=0;
+    while(cin >> n){
+      a[++x]=n;
+    }
+    mergesort(1,x);
+  for(int i=1;i<=x;i++){
     cout << a[i] << ' ';
   }
     cerr<<1.0 * (clock()-start)/CLOCKS_PER_SEC<<endl;
