@@ -4,8 +4,9 @@ using namespace std;
 int *a,n;
 
 int letsTry(){
-  int prevCnt=0,curCnt=1,maxLen=0;bool ok =false;
+  int prevCnt=0,curCnt=1,maxLen=0;bool ok =false,flag=false;
   for(int i=1;i<n;i++){
+    if(a[i]==0 || a[i-1]==0)flag=true;
     if(a[i]==0 && a[i-1]==0){
       ok=true;
       curCnt++;
@@ -15,6 +16,7 @@ int letsTry(){
     }
     maxLen=max(maxLen,prevCnt);
   }
+  if(flag && !ok) return 1;
   if(!ok)return 0;
   return max(maxLen,curCnt);
 }
