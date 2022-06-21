@@ -16,7 +16,7 @@ class Graph{
        }
    }
 
-   void bfs(int src, int dest = -1){
+   void bfs(int src, int dest){
     queue<int> q;
     bool vis[V]{0};
     int *dist = new int[V]{0};
@@ -39,14 +39,25 @@ class Graph{
         }
       }
     }
+    stack<int> st;
     if(dest != -1){
       int tmp = dest;
       while(tmp != src){
-        cout << tmp << "---";
+        st.push(tmp);
         tmp = parent[tmp];
       }
-      cout << src << '\n';
+      st.push(src);
     }
+    while(!st.empty()){
+      if(st.size() > 1){
+      cout << st.top()<< " - > ";
+       st.pop();
+    }else{
+      cout << st.top();
+      st.pop();
+     }
+    }
+     cout << '\n';
   }
 };
 
@@ -68,7 +79,7 @@ int32_t main(){
     g.addEdge(3, 4);
     g.addEdge(3, 5);
     g.addEdge(5, 6);
-    g.bfs(1, 6);
+    g.bfs(1, 4);
     cerr<<1.0 * (clock()-start)/CLOCKS_PER_SEC<<endl;
     return 0;
 }
