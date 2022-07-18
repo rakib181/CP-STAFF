@@ -6,7 +6,7 @@ int p = 31, mod = 1e9 + 7, pw[N + 1];
 
 void pre(){
 pw[0] = 1;
-for(int i = 1; i <= N; i++){
+for(int i = 1; i < N; i++){
    pw[i] = 1LL * pw[i - 1] * p % mod;
   }
 }
@@ -14,7 +14,7 @@ for(int i = 1; i <= N; i++){
 int hash1(string s){
    int n = s.size(), ans = 0;
    for(int i = 0; i < n; i++){
-     ans += 1LL * (s[i] - 'a' + 1) * pw[i - 1] % mod;
+     ans += 1LL * (s[i] - 'a' + 1) * pw[i] % mod;
      ans %= mod;
    }
    return ans;
