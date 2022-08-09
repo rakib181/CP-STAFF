@@ -9,6 +9,9 @@ struct point{
         }
         return x < p.x;
     }
+    bool operator == (point p) const{
+        return (x == p.x && y == p.y);
+    }
 };
 
 //Check whether three points are clockwise or anti-clockwise
@@ -40,30 +43,27 @@ vector<point> convex_hull(vector<point> points, int n){
         }
     }
     points.clear();
-    int i = 0, j = 0;
 
+    
     //Merge up and down vectors
-    while(i < up.size() && j < down.size()){
-        if(up[i].x == down[j].x && up[i].y == down[j].y){
-            points.push_back(up[i]);
-        }else{
-            points.push_back(up[i]);
-            points.push_back(down[j]);
-        }
-        i++, j++;
+    for(int i = 0; i < up.size(); i++){
+        points.push_back(up[i]);
     }
-    while(i < up.size()){
-        points.push_back(up[i++]);
+    for(int i = 0; i < down.size(); i++){
+        points.push_back(down[i]);
     }
-    while(j < down.size()){
-        points.push_back(down[j++]);
-    }
+    sort(points.begin(), points.end());
+    points.resize(unique(points.begin(), points.end()) - points.begin());
     return points;
 }
 
 int32_t main(){
     ios_base::sync_with_stdio(0);
     cin.tie(nullptr);
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif
     int n;
     cin >> n;
     vector<point> ar(n);
