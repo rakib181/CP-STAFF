@@ -27,17 +27,7 @@ bool ccw(Point a, Point b, Point c) {
     }
     return ok;
 }
-bool cll(Point a, Point b, Point c) {
-    long long x1 = a.x * (c.y - b.y), y1 = b.x * (a.y - c.y), z1 = c.x * (b.y - a.y);
-    bool ok = false;
-    if(x1 == 0 && y1 == 0 && z1 == 0){
-        ok = true;
-    }
-    return ok;
-}
 vector<Point> convex_hull(vector<Point> points) {
-    if (points.size() <= 2) return points;
-    sort(points.begin(), points.end());
     vector<Point> up, down;
     Point first = points[0], last = points.back();
     up.push_back(first); down.push_back(first);
@@ -67,8 +57,7 @@ vector<Point> convex_hull(vector<Point> points) {
     return points;
 }
 
-int main()
-{
+int32_t main(){
     ios_base::sync_with_stdio(0);
     cin.tie(nullptr);
     int n;
