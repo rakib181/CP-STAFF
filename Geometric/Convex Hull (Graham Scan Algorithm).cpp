@@ -41,16 +41,22 @@ vector<point> convex_hull(vector<point> points, int n){
     }
     points.clear();
     int i = 0, j = 0;
-    
+
     //Merge up and down vectors
-    while(i < up.size() || j < down.size()){
-        if(up[i].x == down[i].x && up[i].y == down[i].y){
+    while(i < up.size() && j < down.size()){
+        if(up[i].x == down[j].x && up[i].y == down[j].y){
             points.push_back(up[i]);
         }else{
             points.push_back(up[i]);
-            points.push_back(down[i]);
+            points.push_back(down[j]);
         }
         i++, j++;
+    }
+    while(i < up.size()){
+        points.push_back(up[i++]);
+    }
+    while(j < down.size()){
+        points.push_back(down[j++]);
     }
     return points;
 }
