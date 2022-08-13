@@ -71,7 +71,7 @@ int32_t main(){
     int k = 0;
     vector<int> ans(q);
     for(int i = 0; i < q; i++){
-       while(k < n && ar[k] <= query[k].ai){
+       while(k < n && ar[k] <= query[i].ai){
         tt.add(ar[k]);
         k++;
        }
