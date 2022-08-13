@@ -79,8 +79,9 @@ int32_t main(){
        else ans[query[i].idx] = tt.getMax(query[i].xi);
     }
     for(int i = 0; i < q; i++){
-        if(!ans[i])cout << "-1" << ' ';
-        else cout << ans[i] << ' ';
+
+
+        cout << ans[i] << ' ';
     }
     cout << '\n';
     return 0;
