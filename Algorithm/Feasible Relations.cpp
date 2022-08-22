@@ -44,7 +44,7 @@ int32_t main(){
       int tt;
       cin >> tt;
       while(tt--){
-        for(int i = 1; i < N; i++)parent[i] = 0, Rank[i] = 0;
+      for(int i = 1; i < N; i++)parent[i] = 0, Rank[i] = 0;
       makeset();
       int n, k;
       cin >> n >> k;
@@ -62,6 +62,7 @@ int32_t main(){
      for(auto x : query){
        if(find(x.first) == find(x.second)){
         ok = false;
+        break;
        }
      }
      if(ok)cout << "YES" << '\n';
