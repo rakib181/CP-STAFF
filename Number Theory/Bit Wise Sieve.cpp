@@ -46,3 +46,50 @@ int32_t main(){
    cerr<< 1.0 * (clock()-st)/CLOCKS_PER_SEC<<'\n';
    return 0;
 }
+
+
+// Again
+
+#include<bits/stdc++.h>
+using namespace std;
+const int N = 1e8;
+int status[(N >> 5)];
+
+bool check(int n, int pos){
+return  (n & (1 << pos)) < 1;
+}
+int Set(int n, int pos){
+    return n = n | (1 << pos);
+}
+
+void bitSieve(){
+    for(int i = 3; i * i <= N; i += 2){
+        if(check(status[(i >> 5)], (i & 31))){
+            for(int j = i * i; j <= N; j += i){
+                status[(j >> 5)] = Set(status[(j >> 5)], (j & 31));
+            }
+        }
+    }
+    cout << "2 " ;
+    for(int i = 3; i <= N; i += 2){
+        if(check(status[(i >> 5)], (i & 31))){
+           cout << i << ' ';
+        }
+    }
+}
+
+
+
+int32_t main(){
+     ios_base::sync_with_stdio(0);
+      cin.tie(0); 
+      #ifndef ONLINE_JUDGE 
+      freopen("input.txt","r",stdin); 
+      freopen("output.txt","w",stdout); 
+      #endif
+      auto start=clock();
+      bitSieve();
+      cerr<<1.0 * (clock()-start)/CLOCKS_PER_SEC<<endl;
+      return 0;
+}
+
