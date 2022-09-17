@@ -27,12 +27,12 @@ class Graph{
 
     void dfs(int cur, int par, vector<vector<int>> &lca, vector<int> &lvl, int log){
         lca[cur][0] = par;
-        // for(int i = 1; i <= log; i++){
-        //    lca[cur][i] = lca[lca[cur][i - 1]][i - 1];
-        // }
+        for(int i = 1; i <= log; i++){
+           lca[cur][i] = lca[lca[cur][i - 1]][i - 1];
+        }
         for(auto x : l[cur]){
             if(x != par){
-                lvl[x] = lvl[cur] ;
+                lvl[x] = lvl[cur] + 1;
                 dfs(x, cur, lca, lvl, log);
             }
         }
@@ -42,14 +42,13 @@ class Graph{
            if(lvl[u] < lvl[v]){
             swap(u, v);
            }
+           if(u == v)return v;
            int dist = lvl[u] - lvl[v];
-
            while(dist){
              int i = log2(dist);
-             v = lca[u][i];
+             u = lca[u][i];
              dist -= (1 << i);
            }
-           if(u == v)return u;
            for(int i = log; i >= 0; i--){
             if(lca[u][i] != lca[v][i]){
                 u = lca[u][i];
@@ -80,15 +79,10 @@ int32_t main(){
         g.addEdge(u, v);
       }
       g.dfs(1, 1, lca, lvl, log); 
-      for(int i = 1; i <= n; i++){
-        for(int j = 1; j < log; j++){
-            lca[i][j] = lca[lca[i][j - 1]][j - 1];
-        }
-      }
-      cout << g.lowest_common_ancestor(6, 9, lca, lvl, log) << '\n';
+      cout << g.lowest_common_ancestor(11, 12, lca, lvl, log) << '\n';
       cout << g.lowest_common_ancestor(5, 9, lca, lvl, log) << '\n';
       cout << g.lowest_common_ancestor(6, 8, lca, lvl, log) << '\n';
-      cout << g.lowest_common_ancestor(6, 1, lca, lvl, log) << '\n';
+      cout << g.lowest_common_ancestor(8, 10, lca, lvl, log) << '\n';
       cerr<<1.0 * (clock()-start)/CLOCKS_PER_SEC<<endl;
       return 0;
 }
