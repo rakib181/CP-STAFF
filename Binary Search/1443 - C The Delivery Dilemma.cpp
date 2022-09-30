@@ -2,12 +2,16 @@
 using namespace std;
 
 bool possible(vector<pair<int, int>> &ar, int n, long long x, vector<long long> &suff){
-    int cnt = 0;
-    for(int i = 0; i < n; i++){
-        if(ar[i].first <= x)cnt++;
-        else break;
+    int l = -1, r = n, ans = 0;
+    while(r > l + 1){
+        int mid = (l + r) >> 1;
+        if(ar[mid].first > x){
+            r = mid;
+        }else {
+            l = mid;
+        }
     }
-    int rem = n - cnt;
+    int rem = n - (l + 1);
     if(suff[rem - 1] <= x)return true;
     return false;
 }
