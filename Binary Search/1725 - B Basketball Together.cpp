@@ -6,6 +6,7 @@ bool possible(vector<long long> &ar, int n, long long lim, long long tot_pow){
     for(int i = 0; i < n; i++){
        cnt = tot_pow / ar[i] + 1;
        if(temp - cnt >= 0) take++, temp -= cnt;
+       else break;
     }
     return take >= lim;
 }
