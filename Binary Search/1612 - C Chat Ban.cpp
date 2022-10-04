@@ -16,8 +16,7 @@ int32_t main(){
         long long l = 1LL, r = 2LL * k - 1LL, ans = 2LL * k - 1LL;
         while(l <= r){
             long long mid = (l + r) >> 1LL;
-            if(mid <= k and progression(mid) < x)l = mid + 1LL;
-            else if(mid > k and progression(k) + progression(k - 1) - progression((2 * k - 1) - mid) < x){
+            if((mid <= k and progression(mid) < x) or (mid > k and progression(k) + progression(k - 1) - progression((2 * k - 1) - mid) < x)){
                 l = mid + 1LL;
             }else{
                 ans = mid;
