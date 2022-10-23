@@ -10,14 +10,8 @@ int32_t main(){
     cin >>  n >> a >> b;
     auto possible = [&](int x){
         int xx = min(a, b), yy = max(a, b), cnt = 0;
-        while(xx - x >= 0){
-            cnt++;
-            xx -= x;
-        }
-        while(yy - x >= 0){
-            cnt++;
-            yy -= x;
-        }
+        cnt += xx / x;
+        cnt += yy / x;
         return cnt >= n;
     };
     int l = 1, r = min(a, b), ans = 0;
