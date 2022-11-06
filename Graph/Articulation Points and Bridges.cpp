@@ -127,3 +127,60 @@ int32_t main(){
       return 0;
 }
 
+//Using Map
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long int
+const int N = 1e5 + 9;
+map<int, vector<int>> g;
+map<int, bool> vis;
+vector<int> dis(N), low(N);
+int timer = 1; set<pair<int, int>> bridge;
+set<int> art_point;
+
+void dfs(int cur, int par) {
+    vis[cur] = true;
+    dis[cur] = low[cur] = timer++;
+    int child = 0;
+    for(auto x : g[cur]){
+        if(!vis[x]){
+            dfs(x, cur);
+            low[cur] = min(low[cur], low[x]);
+            if(low[x] > dis[cur] and cur != par){
+                bridge.insert({cur, x});
+            }
+            if(low[x] >= dis[cur] and cur != par){
+               art_point.insert(cur);
+            }
+            child++;
+        }else if(x != par){
+            low[cur] = min(low[cur], dis[x]);
+        }
+    }
+    if(child > 1 and par == 0)art_point.insert(cur);
+}
+
+int32_t main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int n, m;
+    cin >> n >> m;
+    for(int i = 0; i < m; i++){
+        int u, v;
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+    for(int i = 1; i <= n; i++){
+        if(!vis[i]){
+            dfs(i, 0);
+        }
+    }
+    for(auto x : art_point)cout << x << ' ';
+    cout << '\n';
+    for(auto x : bridge){
+        cout << x.first << ' ' << x.second << '\n';
+    }
+    return 0;
+}
+
