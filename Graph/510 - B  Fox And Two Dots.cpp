@@ -1,26 +1,27 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int N = 5009;
+const int N = 2590;
 set<int> g[N];
 vector <int> vis(N);
 int dx[4] = {0, 0, 1, -1}, dy[4] = {1, -1, 0, 0};
-bool cycle = false;
 
 bool valid(int x, int y, int n, int m, char ch, vector<vector<char>> &grid){
     return x >= 1 and x <= n and y >= 1 and y <= m and grid[x][y] == ch;
 }
 
-void DFS(int cur, int par){
+bool DFS(int cur, int par){
     vis[cur] = 1;
     for(auto x : g[cur]){
         if(!vis[x]){
-            DFS(x, cur);
+          bool sub = DFS(x, cur);
+            if(sub)return true;
         }else if(x != par and vis[x] == 1){
-            cycle = true;
+            return true;
         }
     }
     vis[cur] = 2;
+    return false;
 }
 
 int32_t main(){
@@ -48,13 +49,14 @@ int32_t main(){
     for(int i = 1; i <= n; i++){
         for(int j = 1; j <= m; j++){
                 if (!vis[i * m + j]) {
-                    DFS(i * m + j, -1);
+                   bool cycle = DFS(i * m + j, -1);
+                   if(cycle){
+                       cout << "Yes" << '\n';
+                       return 0;
+                   }
                 }
-            if(cycle)break;
         }
-        if(cycle)break;
     }
-    if(cycle)cout << "Yes" << '\n';
-    else cout << "No" << '\n';
+    cout << "No" << '\n';
     return 0;
 }
