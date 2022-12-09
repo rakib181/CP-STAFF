@@ -17,9 +17,9 @@ void dfs(int cur){
 }
 int comp[N];
 void scc(int cur, int cc){
-    vis[cur] = true, comp[cur] = cc;
+   comp[cur] = cc;
     for(auto x : rev_g[cur]){
-        if(!vis[x]){
+        if(comp[x] == -1){
             scc(x, cc);
         }
     }
@@ -47,12 +47,12 @@ int32_t main() {
             if(!vis[i]){
                 dfs(i);
             }
+            comp[i] = -1;
         }
-        memset(vis, false, sizeof vis);
         int cc = 0;
         reverse(top.begin(), top.end());
         for(auto i : top){
-            if(!vis[i]){
+            if(comp[i] == -1){
                 scc(i, cc++);
             }
         }
@@ -65,7 +65,7 @@ int32_t main() {
             ans[i] = (comp[i] > comp[2 * n - i + 1]);
         }
         for(int i = 1; i <= n; i++){
-            ans[i] ? cout << '+'  <<  ' ' : cout << '-' << ' ';
+            ans[i] ? cout << '+' << ' ' : cout << '-' << ' ';
         }
    return 0;
 }
