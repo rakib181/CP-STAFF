@@ -86,9 +86,7 @@ int main(){
        }else{
            int x;
            cin >> x;
-           int ans = st.query(x);
-           if(ans != INT_MAX)cout << ans << '\n';
-           else cout << "-1" << '\n';
+           cout << st.query(x) << '\n';
        }
     }
     return 0;
