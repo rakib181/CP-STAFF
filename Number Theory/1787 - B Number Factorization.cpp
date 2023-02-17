@@ -1,44 +1,57 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 #define int long long int
-const int N = 505;
-pair<int, int> s[N];
-vector<int> d(N);
 
-signed main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    int tt;
-    cin >> tt;
-    while (tt--){
-        int n, l = 0, cnt = 0;
+void factorize(int n, map<int, int> &mp){
+   for(auto x : {2, 3, 5}){
+       while (n % x == 0){
+           mp[x]++;
+           n /= x;
+       }
+   }
+    static array<int, 8> increments = {4, 2, 4, 2, 4, 6, 2, 6};
+    int i = 0;
+    for (long long d = 7; d * d <= n; d += increments[i++]) {
+        while (n % d == 0) {
+            mp[d]++;
+            n /= d;
+        }
+        if (i == 8)
+            i = 0;
+    }
+    if (n > 1)mp[n]++;
+}
+
+signed main()
+{
+   ios_base::sync_with_stdio(false);
+   cin.tie(nullptr);
+   int tt;
+   cin >> tt;
+    while (tt--) {
+        int n;
         cin >> n;
-        while (n % 2 == 0){
-             cnt++;
-             n /= 2;
-        }
-        if(cnt) s[++l] = {cnt, 2};
-        for(int i = 3; i * i <= n; i += 2){
-            if(n % i == 0){
-                 cnt = 0;
-                while (n % i == 0){
-                    cnt++;
-                    n /= i;
-                }
-                s[++l] = {cnt, i};
-            }
-        }
-        if(n > 1) s[++l] = {1, n};
-        sort(s + 1, s + l + 1);
-        d[l + 1] = 1;
-        for(int i = l; i > 0; i--){
-            d[i] = d[i + 1] * s[i].second;
-        }
+        map<int, int> mp;
+        factorize(n, mp);
         int ans = 0;
-        for(int i = 1; i <= l; i++){
-            if(s[i].first != s[i - 1].first) ans += d[i] * (s[i].first - s[i - 1].first);
+        while (!mp.empty()){
+            int mn = LONG_LONG_MAX;
+            for(auto x : mp){
+                mn = min(mn, x.second);
+            }
+            int cur = 1;
+            vector<int>  bad;
+            for(auto &x : mp){
+                cur *= x.first;
+                x.second -= mn;
+                if(x.second == 0)bad.push_back(x.first);
+            }
+            ans += cur * mn;
+            for(auto x : bad){
+                mp.erase(mp.find(x));
+            }
         }
         cout << ans << '\n';
     }
-    return 0;
+   return 0;
 }
