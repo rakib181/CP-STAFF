@@ -74,3 +74,100 @@ int main(){
     }
     return 0;
 }
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long int
+
+struct segment{
+    int sz{};
+    vector<int> seg, operation;
+    void init(int n){
+        sz = 1;
+        while (sz < n) sz *= 2;
+        seg.assign(2 * sz, 0);
+        operation.assign(2 * sz, 0);
+    }
+    void propagate(int x, int lx, int rx){
+        seg[x] += operation[x];
+        if(rx - lx != 1){
+            operation[2 * x + 1] += operation[x];
+            operation[2 * x + 2] += operation[x];
+        }
+        operation[x] = 0;
+    }
+    void add(int l, int r, int v, int x, int lx, int rx){
+        propagate(x, lx, rx);
+        if(lx >= r or l >= rx)return;
+        if(lx >= l and rx <= r){
+            operation[x] = v;
+            propagate(x, lx, rx);
+            return;
+        }
+        int m = (lx + rx) / 2;
+        add(l, r, v, 2 * x + 1, lx, m);
+        add(l, r, v, 2 * x + 2, m, rx);
+        seg[x] = seg[2 * x + 1] + seg[2 * x + 2];
+    }
+    void add(int l, int r, int v){
+        add(l, r, v, 0, 0, sz);
+    }
+    int query(int i, int x, int lx, int rx){
+        propagate(x, lx, rx);
+        if(rx - lx == 1){
+            return seg[x];
+        }
+        int m = (lx + rx) / 2;
+        if(i < m){
+            return query(i, 2 * x + 1, lx, m);
+        }else{
+            return query(i, 2 * x + 2, m, rx);
+        }
+    }
+    int query(int i){
+        return query(i, 0, 0, sz);
+    }
+};
+
+signed main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int tt, cs = 1;
+    cin >> tt;
+    while (tt--){
+        cout << "Case " << cs++ << ":" << '\n';
+        string s;
+        cin >> s;
+        int n = (int) s.size();
+        segment st;
+        st.init(n);
+        int q;
+        cin >> q;
+        while (q--){
+            char c;
+            cin >> c;
+            if(c == 'I'){
+                int l, r;
+                cin >> l >> r;
+                l--;
+                st.add(l, r, 1);
+            }else{
+                int i;
+                cin >> i;
+                i--;
+               int x = st.query(i);
+               if(x & 1){
+                   if(s[i] == '1') {
+                       cout << "0" << '\n';
+                   }else{
+                       cout << "1" << '\n';
+                   }
+               }else{
+                   cout << (s[i] - '0') << '\n';
+               }
+            }
+        }
+    }
+    return 0;
+}
