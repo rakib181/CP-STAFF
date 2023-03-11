@@ -33,7 +33,7 @@ struct Square_Root_Decomposition{
             return ans;
         }
         for(int i = lb + 1; i / d == lb; i++){
-            ans = min(ans, a[i]);
+            ans = min(ans, f[i]);
         }
         for(int i = rb * d; i <= r; i++){
             ans = min(ans, a[i]);
