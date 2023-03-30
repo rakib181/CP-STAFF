@@ -1,52 +1,34 @@
 #include<bits/stdc++.h>
 using namespace std;
-int HbinarySearch(int linear[],int n,int x){
-  int l=-1,r=n;
-     while(r>l+1){
-     int mid =(l+r)/2;
-     if(linear[mid]<x){
-      l=mid;
-     }else{
-       r=mid;
-     } 
+#define int long long
+const int N = 1e5 + 9;
+int a[N], n, q;
+
+int solve(int l, int r, int x){
+    int ans = 0;
+    while(l <= r){
+        int m = (l + r) >> 1;
+        if(a[m] <= x){
+            ans = m;
+            l = m + 1;
+        }else r = m - 1;
     }
-    return r;
+    return ans;
 }
-int LbinarySearch(int linear[],int n,int x){
-  int l=-1,r=n;
-     while(r>l+1){
-     int mid =(l+r)/2;
-     if(linear[mid]<=x){
-      l=mid;
-     }else{
-       r=mid;
-     } 
+
+signed main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cin >> n;
+    for(int i = 1; i <= n; i++){
+        cin >> a[i];
     }
-    return r;
-}
-int32_t main(){
-   ios_base::sync_with_stdio(0);
-    cin.tie(0); 
-    cout.tie(0);
-    #ifndef ONLINE_JUDGE 
-    freopen("input.txt","r",stdin); 
-    freopen("output.txt","w",stdout); 
-    #endif
-    auto start=clock();
-    int n;
-    cin>>n;
-    int linear[n];
-    for(int i=0;i<n;i++){
-      cin>>linear[i];
+    sort(a + 1, a + n + 1);
+    cin >> q;
+    while (q--) {
+       int l, r;
+       cin >> l >> r;
+       cout << solve(1, n, r) - solve(1, n, l - 1) << '\n';
     }
-    sort(linear,linear+n);
-    int q;cin>>q;
-    while(q--){
-    int x,y;cin>>x>>y;
-    int ans = HbinarySearch(linear,n,x);
-    int ans1 = LbinarySearch(linear,n,y);
-    cout<<ans1-ans<<'\n';
-  }
-    cerr<<1.0 * (clock()-start)/CLOCKS_PER_SEC<<endl;
     return 0;
 }
