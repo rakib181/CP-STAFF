@@ -32,3 +32,31 @@ int32_t main(){
     cerr<<1.0 * (clock()-start)/CLOCKS_PER_SEC<<endl;
     return 0;
 }
+
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long int
+
+signed main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int n, x, y;
+    cin >> n >> x >> y;
+    auto good = [&](int m){
+        return (m / x) + (m / y) >= (n - 1);
+    };
+    if(n == 1){
+        cout << min(x, y) << '\n';
+        return 0;
+    }
+    int l = 1, r = n * max(x, y), ans = 0;
+    while (l <= r){
+        int m = (l + r) >> 1;
+        if(good(m)){
+            ans = m;
+            r = m - 1;
+        }else l = m + 1;
+    }
+    cout << ans + min(x, y) << '\n';
+    return 0;
+}
