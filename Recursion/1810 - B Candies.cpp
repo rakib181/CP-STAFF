@@ -11,12 +11,10 @@ void solve(int n){
     if(x % 2 == 0)x += 1;
     if(2 * x + 1 == n){
         ans.push_back(true);
-        solve(x);
     }else{
         ans.push_back(false);
-        solve(x);
     }
-
+    solve(x);
 }
 
 signed main(){
@@ -36,12 +34,7 @@ signed main(){
            cout << "1\n" << "2\n";
            continue;
        }
-        int x = n / 2;
-        if(x % 2 == 0) x += 1;  bool flg;
-        if(2 * x + 1 == n)flg = true;
-        else flg = false;
-        ans.push_back(flg);
-        solve(x);
+        solve(n);
         reverse(ans.begin(), ans.end());
         cout << (int) ans.size() << '\n';
         for(auto && an : ans){
