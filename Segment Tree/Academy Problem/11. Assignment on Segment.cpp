@@ -2,11 +2,11 @@
 using namespace std;
 using ll = long long;
 const int N = 1e5 + 9;
-int a[N], lazy[4 * N];; ll t[4 * N];
+int a[N], lazy[4 * N]; ll t[4 * N];
 
 void push(int node, int b, int e) {
 	if (lazy[node] == -1)return;
-	t[node] = lazy[node];
+	t[node] = 1LL * (e - b + 1) * lazy[node];
 	if (b != e) {
 		lazy[2 * node] = lazy[node];
 		lazy[2 * node + 1] = lazy[node];
