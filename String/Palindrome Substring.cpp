@@ -2,7 +2,7 @@
 using namespace std;
 using ll = long long;
 
-const int N = 2e5 + 9, p1 = 137, p2 = 277, mod1 = 1e9 + 7, mod2 = 1e9 + 9;
+const int N = 1005, p1 = 137, p2 = 277, mod1 = 1e9 + 7, mod2 = 1e9 + 9;
 pair<int, int> pw[N], ipw[N];
 
 int bin(int x, int y, int mod) {
@@ -31,7 +31,7 @@ void cal() {
 	}
 }
 
-struct H1 {
+struct H {
 	pair<int, int> prefix[N];
 
 	void build(string &s) {
@@ -65,43 +65,8 @@ struct H1 {
 		}
 		return ans;
 	}
-} h1;
+} h1, h2;
 
-struct H2 {
-	pair<int, int> prefix[N];
-
-	void build(string &s) {
-		int n = (int) s.size();
-		for (int i = 0; i < n; i++) {
-			prefix[i].first = 1LL * s[i] * pw[i].first % mod1;
-			if (i)prefix[i].first = (1LL * prefix[i].first + prefix[i - 1].first) % mod1;
-			prefix[i].second = 1LL * s[i] * pw[i].second % mod2;
-			if (i)prefix[i].second = (1LL * prefix[i].second + prefix[i - 1].second) % mod2;
-		}
-	}
-
-	pair<int, int> get_hash(int i, int j) {
-		assert(i <= j);
-		pair<int, int> ans = {0, 0};
-		ans.first = prefix[j].first;
-		if (i) ans.first =  ((1LL * ans.first - prefix[i - 1].first) + mod1) % mod1;
-		ans.first = 1LL * ans.first * ipw[i].first % mod1;
-		ans.second = prefix[j].second;
-		if (i) ans.second = ((1LL * ans.second - prefix[i - 1].second) + mod2) % mod2;
-		ans.second = 1LL * ans.second * ipw[i].second % mod2;
-		return ans;
-	}
-
-	pair<int, int> _hash(string &s) {
-		pair<int, int> ans = {0, 0};
-		int n = (int) s.size();
-		for (int i = 0; i < n; i++) {
-			ans.first = (1LL * ans.first +  1LL * s[i] * pw[i].first % mod1) % mod1;
-			ans.second = (1LL * ans.second + 1LL * s[i] * pw[i].second % mod2) % mod2;
-		}
-		return ans;
-	}
-} h2;
 
 signed main() {
 	ios_base::sync_with_stdio(false);
