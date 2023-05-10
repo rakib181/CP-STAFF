@@ -107,3 +107,100 @@ signed main() {
     return 0;
 }
 
+// Another cool approach
+#include<bits/stdc++.h>
+using namespace std;
+using ll = long long;
+const int N = 2e5 + 9;
+int a[N], t[4 * N], lazy[4 * N];
+bool done[4 * N];
+
+void push(int node, int b,int e){
+    if(lazy[node] == 0)return;
+    t[node] += lazy[node];
+    if(b != e){
+        lazy[2 * node] += lazy[node];
+        lazy[2 * node + 1] += lazy[node];
+    }
+    lazy[node] = 0;
+}
+
+void build(int node, int b, int e){
+    lazy[node] = 0; done[node] = false;
+    if(b == e){
+        t[node] = 0;
+        return;
+    }
+    int m = (b + e) >> 1;
+    build(2 * node, b, m);
+    build(2 * node + 1, m + 1, e);
+    t[node] = 0;
+}
+
+void upd(int node, int b, int e, int l, int r, int v){
+    push(node, b, e);
+    if(b > r or e < l)return;
+    if(b >= l and e <= r){
+        lazy[node] = v;
+        push(node, b, e);
+        return;
+    }
+    int m = (b + e) >> 1;
+    upd(2 * node, b, m, l, r, v);
+    upd(2 * node + 1, m + 1, e, l, r, v);
+}
+
+int query(int node, int b, int e, int i){
+    push(node, b, e);
+    if(b > i or e < i)return 0;
+    if(b == e)return t[node];
+    int m = (b + e) >> 1;
+    return query(2 * node, b, m, i) + query(2 * node + 1, m + 1, e, i);
+}
+
+int sod(int n){
+    if(n <= 0)return 0;
+    return (n % 10) + sod(n / 10);
+}
+
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int tt;
+    cin >> tt;
+    while(tt--) {
+        int n, q;
+        cin >> n >> q;
+        for (int i = 1; i <= n; i++) {
+            cin >> a[i];
+        }
+        build(1, 1, n);
+        while (q--) {
+            int type;
+            cin >> type;
+            if (type == 1) {
+                int l, r;
+                cin >> l >> r;
+                upd(1, 1, n, l, r, 1);
+            } else {
+                int i;
+                cin >> i;
+                if (!done[i]) {
+                    int x = query(1, 1, n, i);
+                    if (x > 2) x = 3;
+                    int val = a[i];
+                    while (x--) {
+                        val = sod(val);
+                    }
+                    if (val < 10) done[i] = true, a[i] = val;
+                    cout << val << '\n';
+                } else {
+                    cout << a[i] << '\n';
+                }
+            }
+        }
+    }
+    return 0;
+}
+
