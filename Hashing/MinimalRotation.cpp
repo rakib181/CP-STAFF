@@ -85,6 +85,7 @@ int lcp(int i, int j, int x, int y){
     }
     return id;
 }
+
 string s;
 int compare(int i, int j, int x, int y){
     int lc = lcp(i, j, x, y);
