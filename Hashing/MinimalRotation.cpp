@@ -2,7 +2,7 @@
 using namespace std;
 using ll = long long;
 
-const int N = 1e6 + 9, p1 = 131, p2 = 151, mod1 = 2147483647, mod2 = 999999937;
+const int N = 2e6 + 9, p1 = 131, p2 = 151, mod1 = 2147483647, mod2 = 999999937;
 
 int power(int x, int y, int mod){
     int ans = 1;
@@ -72,14 +72,43 @@ pair<int, int> string_hash(string &s){
 }
 
 
+int lcp(int i, int j, int x, int y){
+    int l = 1, r = min(j - i + 1, y - x + 1), id = 0;
+    while(l <= r){
+        int m = (l + r) >> 1;
+        if(get_hash(i, i + m - 1) == get_hash(x, x + m - 1)){
+            id = m;
+            l = m + 1;
+        }else{
+            r = m - 1;
+        }
+    }
+    return id;
+}
+string s;
+int compare(int i, int j, int x, int y){
+    int lc = lcp(i, j, x, y);
+    int len1 = j - i + 1, len2 = y - x + 1;
+    if(len1 == len2 and len1 == lc)return 0; // equal
+    if(len1 == lc)return -1;  // 1st one is smaller
+    if(len2 == lc)return 1;   // 2nd one is smaller
+    return s[i + lc] < s[x + lc] ? -1 : 1;
+}
+
 signed main(){
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cal();
-    string s;
     cin >> s;
     int n = (int) s.size();
+    s += s;
     build(s);
-
+    int mni = 0, mnj = n - 1;
+    for(int i = 0; i + n - 1 < 2 * n; i++){
+        if(compare(mni, mnj, i, i + n - 1) == 1){
+            mni = i, mnj = i + n - 1;
+        }
+    }
+    cout << s.substr(mni, n) << '\n';
     return 0;
 }
