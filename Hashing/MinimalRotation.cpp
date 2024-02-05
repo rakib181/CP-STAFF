@@ -80,10 +80,6 @@ signed main(){
     cin >> s;
     int n = (int) s.size();
     build(s);
-    for(int i = 0; i < n - 1; i++){
-        if(get_hash(0, i) == get_hash(n - i - 1, n - 1)){
-            cout << i + 1 << ' ';
-        }
-    }
+
     return 0;
 }
