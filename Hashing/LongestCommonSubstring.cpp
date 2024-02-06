@@ -36,8 +36,9 @@ void cal(){
 
 struct HASH {
     pair<int, int> prefix[N];
-
-    void build(string &s) {
+    string s;
+    void build(string &a) {
+        this -> s = a;
         int n = (int) s.size();
         for (int i = 0; i < n; i++) {
             prefix[i].first = 1LL * s[i] * pw[i].first % mod1;
@@ -62,7 +63,7 @@ struct HASH {
         return ans;
     }
 
-    static pair<int, int> string_hash(string &s) {
+    pair<int, int> string_hash(string &s) {
         int n = (int) s.size();
         pair<int, int> hs({0, 0});
         for (int i = 0; i < n; i++) {
@@ -71,27 +72,74 @@ struct HASH {
         }
         return hs;
     }
-}hash1, hash2;
+
+
+    int lcp(int i, int j, int x, int y) {
+        int l = 1, r = min(j - i + 1, y - x + 1), id = 0;
+        while (l <= r) {
+            int m = (l + r) >> 1;
+            if (get_hash(i, i + m - 1) == get_hash(x, x + m - 1)) {
+                id = m;
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+        return id;
+    }
+    int compare(int i, int j, int x, int y){
+        int lc = lcp(i, j, x, y);
+        int len1 = j - i + 1, len2 = y - x + 1;
+        if(len1 == len2 and len1 == lc)return 0; // equal
+        if(len1 == lc)return -1;  // 1st one is smaller
+        if(len2 == lc)return 1;   // 2nd one is smaller
+        return s[i + lc] < s[x + lc] ? -1 : 1;
+    }
+}hashing;
+string a, b, s;
+int n, m;
+pair<int, int> f(int len){
+    set<pair<int, int>> se;
+    for(int i = 0; i + len - 1 < n; i++){
+        se.insert(hashing.get_hash(i, i + len - 1));
+    }
+    int mni = -1, mnj = -1;
+    for(int i = n; i + len - 1 < (int) s.size(); i++){
+        auto hs = hashing.get_hash(i,  i + len - 1);
+        if(se.count(hs)){
+            if(mni == -1){
+                mni = i, mnj = i + len - 1;
+            }else{
+                int cmp = hashing.compare(mni, mnj,  i,  i + len - 1);
+                if(cmp == 1){
+                    mni = i, mnj = i + len - 1;
+                }
+            }
+        }
+    }
+    return {mni, mnj};
+}
 
 signed main(){
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cal();
-    string a, b;
     cin >> a >> b;
-    int n = (int) a.size(), m = (int) b.size();
-    b += b;
-    hash1.build(a);
-    hash2.build(b);
-    set<pair<int, int>> se;
-    for(int i = 0; i + m - 1 < 2 * m; i++){
-        se.insert(hash2.get_hash(i, i + m - 1));
+    s = a + b;
+    n = (int) a.size();
+    m = (int) b.size();
+    hashing.build(s);
+    int l = 1, r = min((int) a.size(), (int) b.size()), mni = 0, mnj = 0;
+    while(l <= r){
+        int mid = (l + r) >> 1;
+        auto val = f(mid);
+        if(val != make_pair(-1, -1)){
+            mni = val.first, mnj = val.second;
+            l = mid + 1;
+        }else{
+            r = mid - 1;
+        }
     }
-    int ans = 0;
-    for(int i = 0; i + m - 1 < n; i++){
-        auto hs = hash1.get_hash(i, i + m - 1);
-        ans += (int) se.count(hs);
-    }
-    cout << ans << '\n';
+    cout << s.substr(mni, (mnj - mni + 1));
     return 0;
 }
