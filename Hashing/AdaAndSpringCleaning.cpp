@@ -2,7 +2,7 @@
 using namespace std;
 using ll = long long;
 
-const int N = 4e5 + 9, p1 = 131, p2 = 151, mod1 = 2147483647, mod2 = 999999937;
+const int N = 3e5 + 9, p1 = 131, p2 = 151, mod1 = 2147483647, mod2 = 999999937;
 
 int power(int x, int y, int mod){
     int ans = 1;
@@ -63,7 +63,7 @@ struct HASH {
         return ans;
     }
 
-    pair<int, int> string_hash(string &s) {
+    static pair<int, int> string_hash(string &s) {
         int n = (int) s.size();
         pair<int, int> hs({0, 0});
         for (int i = 0; i < n; i++) {
@@ -101,19 +101,19 @@ signed main(){
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cal();
-    string s;
-    cin >> s;
-    hashing.build(s);
-    int n = (int) s.size();
-    ll ans = 1LL * (1LL * n * n + n) / 2;
-    vector<int> lcp(n, 0);
-    for(int i = 0; i < n; i++){
-        lcp[i] = hashing.lcp(0, i, i, n - 1);
+    int t;
+    cin >> t;
+    while(t--){
+        int n, len;
+        cin >> n >> len;
+        string s;
+        cin >> s;
+        hashing.build(s);
+        set<pair<int, int>> se;
+        for(int i = 0; i + len - 1 < n; i++){
+            se.insert(hashing.get_hash(i, i + len - 1));
+        }
+        cout << (int) se.size() << '\n';
     }
-    for(int i = 0; i < n; i++){
-        int x = lcp[i];
-        ans -= x;
-    }
-    cout << ans << '\n';
     return 0;
 }
