@@ -1,72 +1,60 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+#define long long long int
 
-struct dsu_save {
-    int u{}, rank_u{}, v{}, rank_v{};
+const int K = 500;
 
-    dsu_save() = default;
-
-    dsu_save(int _u, int _rank_u, int _v, int _rank_v)
-            : u(_u), rank_u(_rank_u), v(_v), rank_v(_rank_v) {}
+struct save{
+    int u, rnk_u, v, rnk_v;
+    save(int _u, int _rnk_u, int _v, int _rnk_v) : u(_u), rnk_u(_rnk_u), v(_v), rnk_v(_rnk_v) {};
 };
 
-struct dsu_with_rollbacks {
-    vector<int> p, rnk;
-    int comps{};
-    stack<dsu_save> op;
-    stack<int> until;
+struct dsu{
+   vector<int> p, rank, point;
+   stack<save> snapshot;
+   int components{};
+   void init(int n){
+       this -> components = n;
+       this -> p.resize(n);
+       this -> rank.resize(n);
+       for(int i = 0; i < n; i++){
+           p[i] = i;
+           rank[i] = 0;
+       }
+   }
+   int find(int u){
+       if(u == p[u])return u;
+       return find(p[u]);
+   }
+   bool unite(int u, int v){
+       u = find(u), v = find(v);
+       if(u == v)return false;
+       if(rank[u] > rank[v])swap(u, v);
+       snapshot.emplace(u, rank[u], v, rank[v]);
+       components--;
+       p[u] = v;
+       if(rank[u] == rank[v]){
+           rank[v]++;
+       }
+       return true;
+   }
 
-    dsu_with_rollbacks() = default;
-
-    explicit dsu_with_rollbacks(int n) {
-        p.resize(n);
-        rnk.resize(n);
-        for (int i = 0; i < n; i++) {
-            p[i] = i;
-            rnk[i] = 0;
-        }
-        comps = n;
-    }
-
-    int find_set(int u) {
-        return (u == p[u]) ? u : find_set(p[u]);
-    }
-
-    bool unite(int u, int v) {
-        u = find_set(u);
-        v = find_set(v);
-        if (u == v)
-            return false;
-        comps--;
-        if (rnk[u] > rnk[v])
-            swap(u, v);
-        op.emplace(u, rnk[u], v, rnk[v]);
-        p[u] = v;
-        if (rnk[u] == rnk[v])
-            rnk[v]++;
-        return true;
-    }
-
-    void rollback() {
-        if (op.empty())
-            return;
-        dsu_save x = op.top();
-        op.pop();
-        comps++;
-        p[x.u] = x.u;
-        rnk[x.u] = x.rank_u;
-        p[x.v] = x.v;
-        rnk[x.v] = x.rank_v;
-    }
-    void persist(){
-        while(until.top() != -1){
-            rollback();
-            until.pop();
-        }
-        until.pop();
-    }
-};
+   void rollback(){
+       if(point.empty())return;
+       while(snapshot.size() > point.back()){
+           auto x = snapshot.top();
+           snapshot.pop();
+           components++;
+           p[x.u] = x.u, p[x.v] = x.v;
+           rank[x.u] = x.rnk_u, rank[x.v] = x.rnk_v;
+       }
+       point.pop_back();
+   }
+   void add_point(){
+       point.emplace_back(snapshot.size());
+   }
+}dsu;
 
 
 signed main(){
@@ -74,23 +62,21 @@ signed main(){
     cin.tie(nullptr);
     int n, q;
     cin >> n >> q;
-    dsu_with_rollbacks dsu(n);
-    while(q--){
+    dsu.init(n);
+    for(int i = 0; i < q; i++){
         string s;
         cin >> s;
-        if(s == "persist"){
-            dsu.until.emplace(-1);
-        }else if(s == "rollback"){
-            dsu.persist();
-            cout << dsu.comps << '\n';
+        if(s[0] == 'p'){
+            dsu.add_point();
+        }else if(s[0] == 'r'){
+            dsu.rollback();
+            cout << dsu.components << '\n';
         }else{
             int u, v;
             cin >> u >> v;
             u--, v--;
-            if(dsu.unite(u, v)){
-                dsu.until.emplace(q);
-            }
-            cout << dsu.comps << '\n';
+            dsu.unite(u, v);
+            cout << dsu.components << '\n';
         }
     }
     return 0;
